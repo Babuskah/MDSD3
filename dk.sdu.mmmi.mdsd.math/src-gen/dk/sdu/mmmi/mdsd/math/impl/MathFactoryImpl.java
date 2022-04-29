@@ -65,12 +65,16 @@ public class MathFactoryImpl extends EFactoryImpl implements MathFactory
   {
     switch (eClass.getClassifierID())
     {
+      case MathPackage.PROGRAM: return createProgram();
+      case MathPackage.EXTERNAL: return createExternal();
+      case MathPackage.EXPRESSION: return createExpression();
       case MathPackage.MATH_EXP: return createMathExp();
       case MathPackage.VAR_BINDING: return createVarBinding();
-      case MathPackage.EXPRESSION: return createExpression();
+      case MathPackage.PARENTHESIS: return createParenthesis();
       case MathPackage.LET_BINDING: return createLetBinding();
       case MathPackage.BINDING: return createBinding();
       case MathPackage.VARIABLE_USE: return createVariableUse();
+      case MathPackage.EXT_CALL: return createExtCall();
       case MathPackage.PLUS: return createPlus();
       case MathPackage.MINUS: return createMinus();
       case MathPackage.MULT: return createMult();
@@ -79,6 +83,42 @@ public class MathFactoryImpl extends EFactoryImpl implements MathFactory
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Program createProgram()
+  {
+    ProgramImpl program = new ProgramImpl();
+    return program;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public External createExternal()
+  {
+    ExternalImpl external = new ExternalImpl();
+    return external;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public Expression createExpression()
+  {
+    ExpressionImpl expression = new ExpressionImpl();
+    return expression;
   }
 
   /**
@@ -111,10 +151,10 @@ public class MathFactoryImpl extends EFactoryImpl implements MathFactory
    * @generated
    */
   @Override
-  public Expression createExpression()
+  public Parenthesis createParenthesis()
   {
-    ExpressionImpl expression = new ExpressionImpl();
-    return expression;
+    ParenthesisImpl parenthesis = new ParenthesisImpl();
+    return parenthesis;
   }
 
   /**
@@ -151,6 +191,18 @@ public class MathFactoryImpl extends EFactoryImpl implements MathFactory
   {
     VariableUseImpl variableUse = new VariableUseImpl();
     return variableUse;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  @Override
+  public ExtCall createExtCall()
+  {
+    ExtCallImpl extCall = new ExtCallImpl();
+    return extCall;
   }
 
   /**

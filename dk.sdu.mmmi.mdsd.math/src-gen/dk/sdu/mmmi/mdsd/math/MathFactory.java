@@ -24,6 +24,33 @@ public interface MathFactory extends EFactory
   MathFactory eINSTANCE = dk.sdu.mmmi.mdsd.math.impl.MathFactoryImpl.init();
 
   /**
+   * Returns a new object of class '<em>Program</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Program</em>'.
+   * @generated
+   */
+  Program createProgram();
+
+  /**
+   * Returns a new object of class '<em>External</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>External</em>'.
+   * @generated
+   */
+  External createExternal();
+
+  /**
+   * Returns a new object of class '<em>Expression</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Expression</em>'.
+   * @generated
+   */
+  Expression createExpression();
+
+  /**
    * Returns a new object of class '<em>Exp</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -42,13 +69,13 @@ public interface MathFactory extends EFactory
   VarBinding createVarBinding();
 
   /**
-   * Returns a new object of class '<em>Expression</em>'.
+   * Returns a new object of class '<em>Parenthesis</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return a new object of class '<em>Expression</em>'.
+   * @return a new object of class '<em>Parenthesis</em>'.
    * @generated
    */
-  Expression createExpression();
+  Parenthesis createParenthesis();
 
   /**
    * Returns a new object of class '<em>Let Binding</em>'.
@@ -76,6 +103,15 @@ public interface MathFactory extends EFactory
    * @generated
    */
   VariableUse createVariableUse();
+
+  /**
+   * Returns a new object of class '<em>Ext Call</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Ext Call</em>'.
+   * @generated
+   */
+  ExtCall createExtCall();
 
   /**
    * Returns a new object of class '<em>Plus</em>'.

@@ -5,13 +5,17 @@ package dk.sdu.mmmi.mdsd.serializer;
 
 import com.google.inject.Inject;
 import dk.sdu.mmmi.mdsd.math.Div;
+import dk.sdu.mmmi.mdsd.math.ExtCall;
+import dk.sdu.mmmi.mdsd.math.External;
 import dk.sdu.mmmi.mdsd.math.LetBinding;
 import dk.sdu.mmmi.mdsd.math.MathExp;
 import dk.sdu.mmmi.mdsd.math.MathNumber;
 import dk.sdu.mmmi.mdsd.math.MathPackage;
 import dk.sdu.mmmi.mdsd.math.Minus;
 import dk.sdu.mmmi.mdsd.math.Mult;
+import dk.sdu.mmmi.mdsd.math.Parenthesis;
 import dk.sdu.mmmi.mdsd.math.Plus;
+import dk.sdu.mmmi.mdsd.math.Program;
 import dk.sdu.mmmi.mdsd.math.VarBinding;
 import dk.sdu.mmmi.mdsd.math.VariableUse;
 import dk.sdu.mmmi.mdsd.services.MathGrammarAccess;
@@ -43,6 +47,12 @@ public class MathSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case MathPackage.DIV:
 				sequence_Factor(context, (Div) semanticObject); 
 				return; 
+			case MathPackage.EXT_CALL:
+				sequence_ExtCall(context, (ExtCall) semanticObject); 
+				return; 
+			case MathPackage.EXTERNAL:
+				sequence_External(context, (External) semanticObject); 
+				return; 
 			case MathPackage.LET_BINDING:
 				sequence_LetBinding(context, (LetBinding) semanticObject); 
 				return; 
@@ -58,8 +68,14 @@ public class MathSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 			case MathPackage.MULT:
 				sequence_Factor(context, (Mult) semanticObject); 
 				return; 
+			case MathPackage.PARENTHESIS:
+				sequence_Parenthesis(context, (Parenthesis) semanticObject); 
+				return; 
 			case MathPackage.PLUS:
 				sequence_Exp(context, (Plus) semanticObject); 
+				return; 
+			case MathPackage.PROGRAM:
+				sequence_Program(context, (Program) semanticObject); 
 				return; 
 			case MathPackage.VAR_BINDING:
 				sequence_VarBinding(context, (VarBinding) semanticObject); 
@@ -123,6 +139,31 @@ public class MathSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 		feeder.accept(grammarAccess.getExpAccess().getPlusLeftAction_1_0_0_0(), semanticObject.getLeft());
 		feeder.accept(grammarAccess.getExpAccess().getRightFactorParserRuleCall_1_1_0(), semanticObject.getRight());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ExtCall returns ExtCall
+	 *
+	 * Constraint:
+	 *     (ref=[External|ID] (args+=Exp args+=Exp*)?)
+	 */
+	protected void sequence_ExtCall(ISerializationContext context, ExtCall semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     External returns External
+	 *     Binding returns External
+	 *
+	 * Constraint:
+	 *     (name=ID (types+=ID types+=ID*)?)
+	 */
+	protected void sequence_External(ISerializationContext context, External semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -217,10 +258,28 @@ public class MathSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	 *     MathExp returns MathExp
 	 *
 	 * Constraint:
-	 *     variables+=VarBinding+
+	 *     variables+=VarBinding*
 	 */
 	protected void sequence_MathExp(ISerializationContext context, MathExp semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     Parenthesis returns Parenthesis
+	 *
+	 * Constraint:
+	 *     exp=Exp
+	 */
+	protected void sequence_Parenthesis(ISerializationContext context, Parenthesis semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, MathPackage.Literals.PARENTHESIS__EXP) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, MathPackage.Literals.PARENTHESIS__EXP));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getParenthesisAccess().getExpExpParserRuleCall_2_0(), semanticObject.getExp());
+		feeder.finish();
 	}
 	
 	
@@ -250,6 +309,18 @@ public class MathSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     Program returns Program
+	 *
+	 * Constraint:
+	 *     (name=ID externals+=External* math=MathExp)
+	 */
+	protected void sequence_Program(ISerializationContext context, Program semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     VarBinding returns VarBinding
 	 *     Binding returns VarBinding
 	 *
@@ -264,8 +335,8 @@ public class MathSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, MathPackage.Literals.VAR_BINDING__EXPRESSION));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getVarBindingAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
-		feeder.accept(grammarAccess.getVarBindingAccess().getExpressionExpParserRuleCall_3_0(), semanticObject.getExpression());
+		feeder.accept(grammarAccess.getVarBindingAccess().getNameIDTerminalRuleCall_2_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getVarBindingAccess().getExpressionExpParserRuleCall_4_0(), semanticObject.getExpression());
 		feeder.finish();
 	}
 	
